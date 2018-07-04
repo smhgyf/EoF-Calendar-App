@@ -1,1 +1,7 @@
 Project Life Cycle
+
+TODO:
+  -Link up Facebook SDK to Data singleton.
+  -Research and set up push notifications for daily alarm
+    -- Add option to edit daily alarm push notification.
+    
