@@ -1,7 +1,9 @@
 package com.sholder552gmail.eofcalendar;
 
+import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -17,13 +19,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
+    private boolean hasMonthCxt;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -53,7 +60,13 @@ public class MainActivity extends AppCompatActivity {
 
         //Capture current date and break it into month day and year variables
         String day = (String)android.text.format.DateFormat.format("dd", new Date());
-        int dayNumber = Integer.parseInt(day);
+        int dayNumber;
+        if(Data.getInstance().hasMonthCxt){
+            dayNumber = 1;
+        }
+        else{
+            dayNumber = Integer.parseInt(day);
+        }
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -64,8 +77,9 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                openActionsDialog();
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        //.setAction("Action", null).show();
             }
         });
 
@@ -92,6 +106,132 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void openActionsDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View view = inflater.inflate(R.layout.calendar_action_dialog, null);
+        builder.setTitle("What would you like to do?");
+        builder.setMessage("Please choose an action:");
+        builder.setView(view)
+                .setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.actionsRadioGroup);
+                        RadioButton currentDateButton = (RadioButton) view.findViewById(R.id.currentDate);
+                        RadioButton monthsButton = (RadioButton) view.findViewById(R.id.viewMonths);
+                        int selectedRadioButton = radioGroup.getCheckedRadioButtonId();
+                        if (selectedRadioButton == monthsButton.getId()){
+                            chooseMonth();
+                        }
+                        if (selectedRadioButton == currentDateButton.getId()){
+                            backToToday();
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    public void chooseMonth(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View view = inflater.inflate(R.layout.calendar_title_pages_view, null);
+
+        view.findViewById(R.id.janTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMonth("jan");
+            }
+        });
+        view.findViewById(R.id.febTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMonth("feb");
+            }
+        });
+        view.findViewById(R.id.marTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMonth("mar");
+            }
+        });
+        view.findViewById(R.id.aprTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMonth("apr");
+            }
+        });
+        view.findViewById(R.id.mayTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMonth("may");
+            }
+        });
+        view.findViewById(R.id.junTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMonth("jun");
+            }
+        });
+        view.findViewById(R.id.julTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMonth("jul");
+            }
+        });
+        view.findViewById(R.id.augTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMonth("aug");
+            }
+        });
+        view.findViewById(R.id.sepTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMonth("sep");
+            }
+        });
+        view.findViewById(R.id.octTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMonth("oct");
+            }
+        });
+        view.findViewById(R.id.novTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMonth("nov");
+            }
+        });
+        view.findViewById(R.id.decTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMonth("dec");
+            }
+        });
+        builder.setTitle("Epitome of Faith");
+        builder.setMessage("Please Choose a Month:");
+        builder.setView(view);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    public void setMonth(String month){
+        Data.getInstance().month = month;
+        Data.getInstance().hasMonthCxt = true;
+        finish();
+        startActivity(getIntent());
+    }
+
+    public void backToToday(){
+        Data.getInstance().hasMonthCxt = false;
+        finish();
+        startActivity(getIntent());
     }
 
     /**
@@ -123,9 +263,14 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            String month = (String)android.text.format.DateFormat.format("MMM", new Date());
             ImageView calendarPage = (ImageView) rootView.findViewById(R.id.calendarImage);
-            calendarPage.setImageResource(getResources().getIdentifier(month.toLowerCase()+ "_" + getArguments().getInt(ARG_SECTION_NUMBER), "drawable", "com.sholder552gmail.eofcalendar"));
+            if (Data.getInstance().hasMonthCxt){
+                calendarPage.setImageResource(getResources().getIdentifier(Data.getInstance().month + "_" + getArguments().getInt(ARG_SECTION_NUMBER), "drawable", "com.sholder552gmail.eofcalendar"));
+            }
+            else {
+                String month = (String) android.text.format.DateFormat.format("MMM", new Date());
+                calendarPage.setImageResource(getResources().getIdentifier(month.toLowerCase() + "_" + getArguments().getInt(ARG_SECTION_NUMBER), "drawable", "com.sholder552gmail.eofcalendar"));
+            }
             //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
