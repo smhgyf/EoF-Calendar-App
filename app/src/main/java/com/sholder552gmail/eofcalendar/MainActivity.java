@@ -28,7 +28,10 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+//TODO: Replace unnecessary if statements with same case/switch statements (if java has them)
+//TODO: Replae Data.getInstance() with a persistant model variable
 
+//TODO: (9/1/2018) Wrote some code today in the Data "model" that has yet to be tested. Test it and then commit code.
 public class MainActivity extends AppCompatActivity {
     private boolean hasMonthCxt;
 
@@ -297,7 +300,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 31;
+
+            //Feed our data class into here, get a context for the amount of days we need based on the month.
+            // Add a couple integers to this number for more placeholderfragments that we could fill with buttons.
+            int days = Data.getInstance().getMonthInfo();
+            return days;
         }
     }
 }
